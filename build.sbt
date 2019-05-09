@@ -7,6 +7,11 @@ ThisBuild / organizationName := "Digital Asset, LLC"
 
 lazy val sdkVersion = "100.12.14"
 
+// This task is used by the integration test to detect which version of Ledger API Test Tool to use.
+val printSdkVersion= taskKey[Unit]("printSdkVersion")
+printSdkVersion := println(sdkVersion)
+
+
 assemblyMergeStrategy in assembly := {
   case "META-INF/io.netty.versions.properties" =>
     // Looks like multiple versions patch versions of of io.netty are getting
