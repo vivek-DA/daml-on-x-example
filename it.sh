@@ -23,6 +23,7 @@ while ! timeout 1 bash -c "echo > /dev/tcp/localhost/6865"; do
     printf "."
 		sleep 1
 done
+
 echo
 echo "Launching the test tool..."
 java -jar ledger-api-test-tool.jar -h localhost -p 6865
