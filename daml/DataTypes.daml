@@ -1,0 +1,26 @@
+daml 1.2 module DataTypes where
+
+-- 1000000000000000000 Wei =  1 Ether
+-- 1000000000000000 Kwei =  1 Ether
+-- 1000000000000 Mwei =  1 Ether
+-- 1000000000 Gwei =  1 Ether
+-- 1000000 Szabo =  1 Ether
+-- 1000 Finney =  1 Ether
+-- 1 Ether =  1 Ether
+-- 0.001 Kether =  1 Ether
+-- 0.000001 Mether =  1 Ether
+-- 0.000000001 Gether =  1 Ether
+-- 0.000000000001 Tether =  1 Ether
+
+currencies = ["USD"]
+
+
+data OfferingDetails = OfferingDetails with
+    issueName: Text
+    issueSymbol: Text
+    fiatValueTotal: Decimal
+    chunkFiatSizes: Decimal
+    minChunks: Int
+    maxChunks: Int
+    currency: Text
+  deriving (Eq, Show, Ord)

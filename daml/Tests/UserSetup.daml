@@ -1,0 +1,66 @@
+daml 1.2 module Tests.UserSetup where
+import Platform
+import Investors
+import Developers
+
+
+setupUsers = scenario do
+  operator <- getParty "Operator"
+  d1 <- getParty "Developer_1"
+  i1 <- getParty "Investor_1"
+  i2 <- getParty "Investor_2"
+  i3 <- getParty "Investor_3"
+  i4 <- getParty "Investor_4"
+
+  let
+    d1_wa = "0x39b24a0774987567f12bb9ab0a769a52e54a82ac"
+    i1_wa = "0x5d6795b5c938af6c5653947809af06d060153f38"
+    i2_wa = "0x5b7d90a5aba13112f4e0d76b008a19db245272d9"
+    i3_wa = "0xff0f8cc179d76b05fad77ce9b08a9e549fef3a09"
+    i4_wa = "0x2f24b0425e3054c25f000c5ae7da71ceb0ae901c"
+
+  directory <- submit operator do
+    create Directory with
+      operator, developers = [], investors = []
+  
+  i1_req <- submit i1 do
+    create InvestorRequestJoin with 
+      investor = i1, walletAddress = i1_wa, ..
+  
+  i2_req <- submit i2 do
+    create InvestorRequestJoin with 
+      investor = i2, walletAddress = i2_wa, ..
+  
+  i3_req <- submit i3 do
+    create InvestorRequestJoin with 
+      investor = i3, walletAddress = i3_wa, ..
+  
+  i4_req <- submit i4 do
+    create InvestorRequestJoin with 
+      investor = i4, walletAddress = i4_wa, ..
+  
+  (i1C, directory) <- submit operator do
+    exercise i1_req GrantInvestorJoin with 
+      directory
+
+  (i2C, directory) <- submit operator do
+    exercise i2_req GrantInvestorJoin with 
+      directory
+
+  (i3C, directory) <- submit operator do
+    exercise i3_req GrantInvestorJoin with 
+      directory
+
+  (i4C, directory) <- submit operator do
+    exercise i4_req GrantInvestorJoin with 
+      directory
+
+  d1_req <- submit d1 do
+    create DeveloperRequestJoin with 
+      developer = d1, walletAddress = d1_wa, ..
+  
+  (d1C, directory) <- submit operator do
+    exercise d1_req GrantDeveloperJoin with 
+      directory
+  
+  return (directory, i1C, i2C, i3C, i4C, d1C)

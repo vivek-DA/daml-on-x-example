@@ -1,0 +1,26 @@
+daml 1.2 module Platform where
+
+
+template Directory
+  with
+    operator: Party
+    developers: [Party]
+    investors: [Party]
+  where 
+    signatory operator
+    observer developers, investors
+
+    controller operator can
+      AddDeveloper: ContractId Directory
+        with
+          developer: Party
+        do
+          create this with
+            developers = developer :: developers
+
+      AddInvestor: ContractId Directory
+        with
+          investor: Party
+        do
+          create this with
+            investors = investor :: investors

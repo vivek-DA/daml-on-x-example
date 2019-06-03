@@ -1,0 +1,41 @@
+daml 1.2 module Investors where
+import Platform
+import ERC20
+
+template InvestorRequestJoin
+  with
+    investor: Party
+    operator: Party
+    walletAddress: Text
+  where
+    signatory investor
+
+    controller operator can
+      GrantInvestorJoin: (
+          ContractId Investor,
+          ContractId Directory
+        )
+        with
+          directory: ContractId Directory
+        do
+          inv <- create Investor with ..
+          dir <- exercise directory AddInvestor with ..
+          return (inv, dir)
+
+
+template Investor
+  with
+    investor: Party
+    operator: Party
+    walletAddress: Text
+  where
+    signatory investor, operator
+
+    controller investor can
+      nonconsuming BuyinToToken: ContractId TokenBuyinBid
+        with
+          tokenOffering: ContractId ERC20TokenIssue
+          quantity: Int
+        do
+          to_ <- fetch tokenOffering
+          create TokenBuyinBid with issuer = to_.issuer, ..

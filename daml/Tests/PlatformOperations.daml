@@ -1,0 +1,64 @@
+daml 1.2 module Tests.PlatformOperations where
+import DataTypes
+-- import Platform
+import ERC20
+import Investors
+import Developers
+import Tests.UserSetup
+
+
+platformOperations = scenario do
+  (directory, i1C, i2C, i3C, i4C, d1C) <- setupUsers
+
+  d1 <- getParty "Developer_1"
+  i1 <- getParty "Investor_1"
+  i2 <- getParty "Investor_2"
+  i3 <- getParty "Investor_3"
+  i4 <- getParty "Investor_4"
+
+  let
+    d1_wa = "0x39b24a0774987567f12bb9ab0a769a52e54a82ac"
+    i1_wa = "0x5d6795b5c938af6c5653947809af06d060153f38"
+    i2_wa = "0x5b7d90a5aba13112f4e0d76b008a19db245272d9"
+    i3_wa = "0xff0f8cc179d76b05fad77ce9b08a9e549fef3a09"
+    i4_wa = "0x2f24b0425e3054c25f000c5ae7da71ceb0ae901c"
+
+    offering1 = OfferingDetails with
+      issueName = "THIRTEEN EAST + WEST"
+      issueSymbol = "13EW01"
+      fiatValueTotal = 25000000.0
+      chunkFiatSizes = 25000.0
+      minChunks = 1
+      maxChunks = 1000
+      currency = "USD"
+
+  d1Offer1 <- submit d1 do
+    exercise d1C ListNewOffering with
+      directory, offering = offering1
+  
+  i1BuyinBid_1 <- submit i1 do
+    exercise i1C BuyinToToken with
+      tokenOffering = d1Offer1, quantity = 200
+  
+  (d1Offer1, i1Shares1) <- submit d1 do
+    exercise i1BuyinBid_1 AcceptTokenBid
+  
+  i2BuyinBid_1 <- submit i2 do
+    exercise i2C BuyinToToken with
+      tokenOffering = d1Offer1, quantity = 400
+  
+  (d1Offer1, i2Shares1) <- submit d1 do
+    exercise i2BuyinBid_1 AcceptTokenBid
+  
+  i3BuyinBid_1 <- submit i3 do
+    exercise i3C BuyinToToken with
+      tokenOffering = d1Offer1, quantity = 400
+  
+  (d1Offer1, i3Shares1) <- submit d1 do
+    exercise i3BuyinBid_1 AcceptTokenBid
+  
+  -- balReq <- submit d1 do
+  --   exercise d1Offer1 BalanceOf with
+  --     requestor = d1, walletAddress = i1_wa
+  
+  return ()

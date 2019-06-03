@@ -1,0 +1,46 @@
+daml 1.2 module Developers where
+import DataTypes
+import Platform
+import ERC20
+
+template DeveloperRequestJoin
+  with
+    developer: Party
+    operator: Party
+    walletAddress: Text
+  where
+    signatory developer
+
+    controller operator can
+      GrantDeveloperJoin: (
+          ContractId Developer,
+          ContractId Directory
+        )
+        with
+          directory: ContractId Directory
+        do
+          inv <- create Developer with ..
+          dir <- exercise directory AddDeveloper with ..
+          return (inv, dir)
+
+
+template Developer
+  with
+    developer: Party
+    operator: Party
+    walletAddress: Text
+  where
+    signatory developer, operator
+
+    controller developer can
+      nonconsuming ListNewOffering: ContractId ERC20TokenIssue
+        with
+          directory: ContractId Directory
+          offering: OfferingDetails
+        do
+          assert (elem offering.currency currencies)
+          dir_ <- fetch directory
+          create ERC20TokenIssue with 
+            issuer = developer, investors = (dir_.investors ++ dir_.developers)
+            outstanding = offering.maxChunks, balances = [], ..
+    

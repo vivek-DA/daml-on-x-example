@@ -1,0 +1,11 @@
+sdk-version: 0.12.21
+name: RET
+source: daml/RealEstatePlatform.daml
+parties:
+  - Operator
+version: 1.0.0
+exposed-modules:
+  - RealEstatePlatform
+dependencies:
+  - daml-prim
+  - daml-stdlib
