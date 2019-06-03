@@ -42,6 +42,7 @@ lazy val root = (project in file("."))
       "com.daml.ledger" %% "participant-state" % sdkVersion,
       "com.daml.ledger" %% "participant-state-kvutils" % sdkVersion,
       "com.github.scopt" %% "scopt" % "4.0.0-RC2",
+      "org.web3j" % "core" % "4.3.1",
     ),
     resolvers += "Digital Asset SDK" at "https://digitalassetsdk.bintray.com/DigitalAssetSDK"
   )
