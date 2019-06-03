@@ -28,3 +28,13 @@ server
 You can test the server in this example as per that approach by running
 
     make it
+
+
+
+## Dependencies
+
+| Function | Tool | Version | Link |
+| --- | --- | --- | --- |
+| Solidity Compiler | `solc` | 0.5.9 | https://github.com/ethereum/go-ethereum/wiki/Contract-Tutorial#install-solc-on-ubuntu |
+| Java Builds | `gradle` | 5.4.1 | https://docs.gradle.org/current/userguide/installation.html |
+
